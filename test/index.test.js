@@ -51,7 +51,6 @@ describe('probot-minimum-reviews', () => {
   })
 
   describe('test events', () => {
-    /*
     it('when pull requests reviews are created', async () => {
       const payload = fixture('pull_request_review', './fixtures/pull_request_review.submitted')
       // Simulates delivery of a payload
@@ -60,7 +59,6 @@ describe('probot-minimum-reviews', () => {
       expect(github.pullRequests.getReviews).toHaveBeenCalled()
       expect(github.repos.createStatus).toHaveBeenCalled()
     })
-    */
 
     it('when pull requests are opened', async () => {
       const payload = fixture('pull_request', './fixtures/pull_request.opened')
