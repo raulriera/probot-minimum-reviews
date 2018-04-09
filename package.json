@@ -4,7 +4,7 @@
   "description": "",
   "author": "Raul Riera <rieraraul@gmail.com>",
   "license": "ISC",
-  "repository": "https://github.com/raulriera/minimum-reviews.git",
+  "repository": "https://github.com/raulriera/probot-minimum-reviews.git",
   "scripts": {
     "dev": "nodemon --exec \"npm start\"",
     "start": "probot run ./index.js",
