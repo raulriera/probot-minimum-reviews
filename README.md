@@ -17,9 +17,6 @@ reviewsUntilReady: 2
 # Number of changes in the pull request to start enforcing the reviewsUntilReady rule
 changesThreshold: 100
 
-# URL the users are taken to when clicking the commit status
-statusUrl: 'https://github.com/apps/minimum-reviews'
-
 # Message to display when the commit status passes
 readyMessage: 'No pending reviews'
 
