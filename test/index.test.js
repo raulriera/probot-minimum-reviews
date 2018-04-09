@@ -6,6 +6,15 @@ const app = require('..')
 // Then put any larger testing payloads in there
 const payload = require('./fixtures/pull_request.opened')
 
+const config = `
+reviewsUntilReady: 2
+changesThreshold: 100
+statusUrl: 'https://github.com/apps/minimum-reviews'
+readyMessage: 'No pending reviews'
+notReadyMessage: 'Pending review approvals'
+notReadyState: 'pending'
+`
+
 describe('your-app', () => {
   let robot
   let github
@@ -23,10 +32,11 @@ describe('your-app', () => {
         }))
       },
       repos: {
-        async getContent(params) {
-          const content = Buffer.from(params).toString('base64')
-          return { data: { content } }
-        },
+        getContent: jest.fn().mockImplementation(() => Promise.resolve({
+          data: {
+            content: Buffer.from(config).toString('base64')
+          }
+        })),
         createStatus: jest.fn().mockReturnValue(Promise.resolve({
           data: true
         }))
