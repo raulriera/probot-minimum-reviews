@@ -1,4 +1,4 @@
-# Probot: Minimum Reviews
+# Probot: Minimum Reviews [![Build Status](https://travis-ci.org/raulriera/probot-minimum-reviews.svg?branch=master)](https://travis-ci.org/raulriera/probot-minimum-reviews)
 
 > a GitHub App built with [Probot](https://github.com/probot/probot) that enforces a minimum number of reviews in Pull Requests.
 
