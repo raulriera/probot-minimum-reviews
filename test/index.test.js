@@ -6,7 +6,6 @@ const app = require('..')
 const config = `
 reviewsUntilReady: 2
 changesThreshold: 100
-statusUrl: 'https://github.com/apps/minimum-reviews'
 readyMessage: 'No pending reviews'
 notReadyMessage: 'Pending review approvals'
 notReadyState: 'pending'
