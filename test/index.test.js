@@ -2,9 +2,6 @@
 const {createRobot} = require('probot')
 // Requiring our app
 const app = require('..')
-// Create a fixtures folder in your test folder
-// Then put any larger testing payloads in there
-const payload = require('./fixtures/pull_request.opened')
 
 const config = `
 reviewsUntilReady: 2
@@ -15,7 +12,14 @@ notReadyMessage: 'Pending review approvals'
 notReadyState: 'pending'
 `
 
-describe('your-app', () => {
+function fixture (name, path) {
+  return {
+    event: name,
+    payload: require(path)
+  }
+}
+
+describe('probot-minimum-reviews', () => {
   let robot
   let github
 
@@ -28,7 +32,7 @@ describe('your-app', () => {
     github = {
       pullRequests: {
         getReviews: jest.fn().mockReturnValue(Promise.resolve({
-          data: [{ state: 'APPROVED' }]
+          data: [{ state: 'approved' }]
         }))
       },
       repos: {
@@ -46,34 +50,25 @@ describe('your-app', () => {
     robot.auth = () => Promise.resolve(github)
   })
 
-  describe('your functionality', () => {
-    it('performs an action', async () => {
-      const payloadFixture = {
-        event: 'pull_request',
-        payload: payload
-      }
-
+  describe('test events', () => {
+    /*
+    it('when pull requests reviews are created', async () => {
+      const payload = fixture('pull_request_review', './fixtures/pull_request_review.submitted')
       // Simulates delivery of a payload
-      // payload.event is the X-GitHub-Event header sent by GitHub (for example 'push')
-      // payload.payload is the actual payload body
-      await robot.receive(payloadFixture)
+      await robot.receive(payload)
 
-      expect(github.pullRequests.getReviews).toHaveBeenCalledWith({
-        'number': 1,
-        'owner': 'raulriera',
-        'repo': 'probot-test'
-      })
+      expect(github.pullRequests.getReviews).toHaveBeenCalled()
+      expect(github.repos.createStatus).toHaveBeenCalled()
+    })
+    */
 
-      // This test would pass if in your main code you called `github.repos.createStatus`
-      expect(github.repos.createStatus).toHaveBeenCalledWith({
-        'context': 'probot/minimum-reviews',
-        'description': 'No pending reviews',
-        'owner': 'raulriera',
-        'repo': 'probot-test',
-        'sha': 'e7a3abf45bec74b74fc71d4a653a0e6c754e572a',
-        'state': 'success',
-        'target_url': 'https://github.com/apps/minimum-reviews'
-      })
+    it('when pull requests are opened', async () => {
+      const payload = fixture('pull_request', './fixtures/pull_request.opened')
+      // Simulates delivery of a payload
+      await robot.receive(payload)
+
+      expect(github.pullRequests.getReviews).toHaveBeenCalled()
+      expect(github.repos.createStatus).toHaveBeenCalled()
     })
   })
 })
