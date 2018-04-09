@@ -4,8 +4,8 @@
 
 ## Usage
 
-1. **[Configure the GitHub App](https://github.com/apps/minimum-reviews)**
-2. Create `.github/minimum-reviews.yml` based on the following template
+1. See [docs/deploy.md](docs/deploy.md) to learn how to deploy your own instance of this app.
+2. Create `.github/minimum-reviews.yml` based on the following template.
 3. It will wait for pull requests to be reviewed before marking them as ready to be merged.
 
 A `.github/minimum-reviews.yml` file is required to enable the plugin.
