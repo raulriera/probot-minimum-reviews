@@ -68,4 +68,39 @@ describe('probot-minimum-reviews', () => {
       expect(github.repos.createStatus).toHaveBeenCalled()
     })
   })
+
+  describe('test features', () => {
+    it('when approvals is too low, pull request is invalid', async () => {
+      const payload = fixture('pull_request', './fixtures/pull_request.opened')
+      // Simulates delivery of a payload
+      await robot.receive(payload)
+
+      expect(github.repos.createStatus).toHaveBeenCalledWith({
+        'context': 'probot/minimum-reviews',
+        'description': 'Pending review approvals',
+        'owner': 'raulriera',
+        'repo': 'probot-test',
+        'sha': 'e7a3abf45bec74b74fc71d4a653a0e6c754e572a',
+        'state': 'pending'
+      })
+    })
+
+    it('when threshold is low, approvals are ignored, and pull request is valid', async () => {
+      const payload = fixture('pull_request', './fixtures/pull_request.opened')
+      // Set the threshold to something low
+      payload.payload.pull_request.additions = 1
+      payload.payload.pull_request.deletions = 1
+      // Simulates delivery of a payload
+      await robot.receive(payload)
+
+      expect(github.repos.createStatus).toHaveBeenCalledWith({
+        'context': 'probot/minimum-reviews',
+        'description': 'No pending reviews',
+        'owner': 'raulriera',
+        'repo': 'probot-test',
+        'sha': 'e7a3abf45bec74b74fc71d4a653a0e6c754e572a',
+        'state': 'success'
+      })
+    })
+  })
 })
