@@ -6,7 +6,7 @@
 
 ## Usage
 
-1. See [docs/deploy.md](docs/deploy.md) to learn how to deploy your own instance of this app.
+1. **[Configure the GitHub App](https://github.com/apps/minimum-reviews)**
 2. Create `.github/minimum-reviews.yml` based on the following template.
 3. It will wait for pull requests to be reviewed before marking them as ready to be merged.
 
