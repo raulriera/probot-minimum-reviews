@@ -1,5 +1,7 @@
 # Probot: Minimum Reviews [![Build Status](https://travis-ci.org/raulriera/probot-minimum-reviews.svg?branch=master)](https://travis-ci.org/raulriera/probot-minimum-reviews)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/raulriera/probot-minimum-reviews.svg)](https://greenkeeper.io/)
+
 > a GitHub App built with [Probot](https://github.com/probot/probot) that enforces a minimum number of reviews in Pull Requests.
 
 ![Screenshot](https://user-images.githubusercontent.com/24159/38566574-0015d8b6-3cb2-11e8-872f-e9495192581e.png)
