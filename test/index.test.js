@@ -21,17 +21,29 @@ function fixture (name, path) {
 describe('probot-minimum-reviews', () => {
   let robot
   let github
+  let pullRequestResponse
 
   beforeEach(() => {
     // Here we create a robot instance
     robot = createRobot()
     // Here we initialize the app on the robot instance
     app(robot)
+    // // Default values
+    pullRequestResponse = {
+      additions: 200,
+      deletions: 10,
+      head: {
+        sha: 'e7a3abf45bec74b74fc71d4a653a0e6c754e572a'
+      }
+    }
     // This is an easy way to mock out the GitHub API
     github = {
       pullRequests: {
+        get: jest.fn().mockReturnValue(Promise.resolve({
+          data: pullRequestResponse
+        })),
         getReviews: jest.fn().mockReturnValue(Promise.resolve({
-          data: [{ state: 'approved' }]
+          data: [{ 'state': 'approved' }]
         }))
       },
       repos: {
@@ -55,6 +67,7 @@ describe('probot-minimum-reviews', () => {
       // Simulates delivery of a payload
       await robot.receive(payload)
 
+      expect(github.pullRequests.get).toHaveBeenCalled()
       expect(github.pullRequests.getReviews).toHaveBeenCalled()
       expect(github.repos.createStatus).toHaveBeenCalled()
     })
@@ -64,6 +77,7 @@ describe('probot-minimum-reviews', () => {
       // Simulates delivery of a payload
       await robot.receive(payload)
 
+      expect(github.pullRequests.get).toHaveBeenCalled()
       expect(github.pullRequests.getReviews).toHaveBeenCalled()
       expect(github.repos.createStatus).toHaveBeenCalled()
     })
@@ -88,8 +102,8 @@ describe('probot-minimum-reviews', () => {
     it('when threshold is low, approvals are ignored, and pull request is valid', async () => {
       const payload = fixture('pull_request', './fixtures/pull_request.opened')
       // Set the threshold to something low
-      payload.payload.pull_request.additions = 1
-      payload.payload.pull_request.deletions = 1
+      pullRequestResponse.additions = 1
+      pullRequestResponse.deletions = 1
       // Simulates delivery of a payload
       await robot.receive(payload)
 
