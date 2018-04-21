@@ -22,6 +22,7 @@ describe('probot-minimum-reviews', () => {
   let robot
   let github
   let pullRequestResponse
+  let payload
 
   beforeEach(() => {
     // Here we create a robot instance
@@ -36,6 +37,8 @@ describe('probot-minimum-reviews', () => {
         sha: 'e7a3abf45bec74b74fc71d4a653a0e6c754e572a'
       }
     }
+    // Default event
+    payload = fixture('pull_request', './fixtures/pull_request.opened')
     // This is an easy way to mock out the GitHub API
     github = {
       pullRequests: {
@@ -73,7 +76,6 @@ describe('probot-minimum-reviews', () => {
     })
 
     it('when pull requests are opened', async () => {
-      const payload = fixture('pull_request', './fixtures/pull_request.opened')
       // Simulates delivery of a payload
       await robot.receive(payload)
 
@@ -84,8 +86,7 @@ describe('probot-minimum-reviews', () => {
   })
 
   describe('test features', () => {
-    it('when approvals is too low, pull request is invalid', async () => {
-      const payload = fixture('pull_request', './fixtures/pull_request.opened')
+    it('when approvals count is too low, pull request is invalid', async () => {
       // Simulates delivery of a payload
       await robot.receive(payload)
 
@@ -99,9 +100,8 @@ describe('probot-minimum-reviews', () => {
       })
     })
 
-    it('when threshold is low, approvals are ignored, and pull request is valid', async () => {
-      const payload = fixture('pull_request', './fixtures/pull_request.opened')
-      // Set the threshold to something low
+    it('when under threshold, approvals are ignored, and pull request is valid', async () => {
+      // Set the changes below the threshold
       pullRequestResponse.additions = 1
       pullRequestResponse.deletions = 1
       // Simulates delivery of a payload
