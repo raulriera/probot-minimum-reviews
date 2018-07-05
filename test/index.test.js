@@ -1,7 +1,7 @@
 // Requiring probot allows us to mock out a robot instance
-const {createRobot} = require('probot')
+const {Application} = require('probot')
 // Requiring our app
-const app = require('..')
+const plugin = require('..')
 
 const config = `
 reviewsUntilReady: 2
@@ -19,16 +19,16 @@ function fixture (name, path) {
 }
 
 describe('probot-minimum-reviews', () => {
-  let robot
+  let app
   let github
   let pullRequestResponse
   let payload
 
   beforeEach(() => {
     // Here we create a robot instance
-    robot = createRobot()
+    app = new Application()
     // Here we initialize the app on the robot instance
-    app(robot)
+    app.load(plugin)
     // // Default values
     pullRequestResponse = {
       additions: 200,
@@ -61,14 +61,14 @@ describe('probot-minimum-reviews', () => {
       }
     }
     // Passes the mocked out GitHub API into out robot instance
-    robot.auth = () => Promise.resolve(github)
+    app.auth = () => Promise.resolve(github)
   })
 
   describe('test events', () => {
     it('when pull requests reviews are created', async () => {
       const payload = fixture('pull_request_review', './fixtures/pull_request_review.submitted')
       // Simulates delivery of a payload
-      await robot.receive(payload)
+      await app.receive(payload)
 
       expect(github.pullRequests.get).toHaveBeenCalled()
       expect(github.pullRequests.getReviews).toHaveBeenCalled()
@@ -77,7 +77,7 @@ describe('probot-minimum-reviews', () => {
 
     it('when pull requests are opened', async () => {
       // Simulates delivery of a payload
-      await robot.receive(payload)
+      await app.receive(payload)
 
       expect(github.pullRequests.get).toHaveBeenCalled()
       expect(github.pullRequests.getReviews).toHaveBeenCalled()
@@ -88,7 +88,7 @@ describe('probot-minimum-reviews', () => {
   describe('test features', () => {
     it('when approvals count is too low, pull request is invalid', async () => {
       // Simulates delivery of a payload
-      await robot.receive(payload)
+      await app.receive(payload)
 
       expect(github.repos.createStatus).toHaveBeenCalledWith({
         'context': 'probot/minimum-reviews',
@@ -105,7 +105,7 @@ describe('probot-minimum-reviews', () => {
       pullRequestResponse.additions = 1
       pullRequestResponse.deletions = 1
       // Simulates delivery of a payload
-      await robot.receive(payload)
+      await app.receive(payload)
 
       expect(github.repos.createStatus).toHaveBeenCalledWith({
         'context': 'probot/minimum-reviews',
